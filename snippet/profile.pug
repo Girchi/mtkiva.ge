@@ -1,0 +1,59 @@
+// ======= Head =======
+include parts/head.pug
+// End Head
+
+// Template CSS Files
+link(href='/assets/css/style.css' rel='stylesheet')
+link(href='/assets/css/user.css' rel='stylesheet')
+
+// ======= Header =======
+include parts/header.pug
+// End Header
+
+// ======= Main =======
+.container
+  .profile-header
+    img.user-img(src=`${img}` alt='profile pic')
+    .user-text
+      h4= name
+      span.main-status.cleanWords= status
+      each val in other_statuses
+        span.cleanWords= val
+    a#editBtn.edit-btn(href="/create-card")
+      i.fas.fa-user-edit  
+
+
+//-  CARDS
+
+  
+// ======= Footer =======
+include parts/footer.pug
+// End Footer
+
+// ======= Scripts =======
+include parts/scripts.pug
+// End Scripts
+
+script(type="module"). 
+  //- Sets Multiple Badge Icons 
+  //- import statusChanger from "/assets/js/statusChanger.js";
+  //- const mainStatus = !{JSON.stringify(status)};
+  //- const otherStatuses = !{JSON.stringify(other_statuses)};
+
+  //- document.querySelector('.badges').innerHTML += `
+  //-   <img src="/assets/img/card/${statusChanger(mainStatus, 'class')}.png" alt='bedge' >
+  //- `
+  //- otherStatuses.forEach(status => {
+  //-   document.querySelector('.badges').innerHTML += `
+  //-     <img src="/assets/img/card/${statusChanger(status, 'class')}.png" alt='bedge' >
+  //-   `
+  //- })
+
+  //- Checks If User Owns Page
+  let drupalID = !{JSON.stringify(drupal_id)};
+  const localStore = JSON.parse(localStorage.getItem('UserDetails'));
+  const editBtn = document.getElementById('editBtn');
+  if(localStore && drupalID === localStore.drupalID){
+    console.log('This is logged user');
+    editBtn.classList.add('edit-btn-active');
+  }

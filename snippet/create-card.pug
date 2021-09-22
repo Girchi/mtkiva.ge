@@ -1,0 +1,71 @@
+// ======= Head =======
+include parts/head.pug
+// End Head
+
+link(rel='stylesheet' href='https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css')
+
+// Template Main CSS File
+link(href='/assets/css/style.css' rel='stylesheet')
+link(href='/assets/css/user.css' rel='stylesheet')
+
+// ======= Header =======
+include parts/header.pug
+// End Header
+
+// ======= Main =======
+.container
+  form#cardForm.row(action='/create-card' method='POST' enctype="multipart/form-data")
+    .mb-3.col-12.col-sm-6.col-lg-4(style="display:none")
+      label.form-label Token
+      input.form-control(type='text' id="hiddenToken" name="token" )
+    .mb-3.col-12.col-sm-6.col-lg-4
+      label.form-label სახელი და გვარი
+      input.form-control(type='text' id="nameInput" name="name" required)
+    .mb-3.col-12.col-sm-6.col-lg-4
+      label.form-label პირადი ნომერი
+      input.form-control(type='text' id="idNumInput" name="id_number" maxlength='11' required)
+    .mb-3.col-12.col-sm-6.col-lg-4
+      label.form-label დაბადების თარიღი
+      input.form-control(type='date' id="dateInput" name="birth_date" maxlength='5' required)
+    .mb-3.col-12.col-sm-6.col-lg-4
+      label.form-label მთავარი სტატუსის არჩევა
+      select.form-select(name='status' id="statusInput" required)
+        option(value='ქომაგი') ქომაგი
+        option(value='ახლობელი') ახლობელი
+        option(value='ნარკომომხმარებელი') ნარკომომხმარებელი
+        option(value='ექიმი') ექიმი
+        option(value='პაციენტი') პაციენტი
+        option(value='სამართალდამცავი') სამართალდამცავი
+
+    .mb-3.col-12.col-sm-6.col-lg-4
+      label.form-label დამატებითი სტატუსების არჩევა
+      select.form-select(name='other_statuses' id="multipleStatusInput" multiple )
+        option(value='ქომაგი') ქომაგი
+        option(value='ახლობელი') ახლობელი
+        option(value='ნარკომომხმარებელი') ნარკომომხმარებელი
+        option(value='ექიმი') ექიმი
+        option(value='პაციენტი') პაციენტი
+        option(value='სამართალდამცავი') სამართალდამცავი
+
+    .mb-3.col-12.col-sm-6.col-lg-4
+      label.form-label.w-100 ფოტოს ატვირთვა
+      input.form-control-file(type='file' for='image' id="imageInput" name="image" value='Choose Image' required)
+
+    button.btn.btn-success(type='submit') დამატება
+
+  //- Live cards customize view
+  //- CARDS
+
+ 
+// ======= Footer =======
+include parts/footer.pug
+// End Footer
+
+// ======= Scripts =======
+include parts/scripts.pug
+// End Scripts
+
+script(src='https://code.jquery.com/jquery-3.6.0.min.js' integrity='sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=' crossorigin='anonymous')
+script(src='https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js')
+
+script(type="module" src='/assets/js/customizeCard.js')

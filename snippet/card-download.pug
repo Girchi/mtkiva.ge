@@ -1,0 +1,56 @@
+// ======= Head =======
+include parts/head.pug
+// End Head
+
+// Template Main CSS File
+link(href='/assets/css/style.css' rel='stylesheet')
+
+body
+  // ======= Header =======
+  include parts/header.pug
+  // End Header
+
+  // ======= main =======
+  main.container.documents
+
+    form#cardForm.row(action='/cards-download' method='POST')
+      button.btn.btn-success(type='submit') Regenerate Documents
+
+    hr
+    h2 Important
+    each PDF in important
+      a(href=`/generate/pdf/${PDF}` download target='_blank')
+        article.document-canvas
+          span.document-value
+            span= PDF
+            span
+              i.fas.fa-cloud-download-alt
+    hr
+
+    h2 Staff
+    each PDF in staff  
+      a(href=`/generate/pdf/${PDF}` download target='_blank')
+        article.document-canvas
+          span.document-value
+            span= PDF
+            span
+              i.fas.fa-cloud-download-alt
+    hr
+
+    h2 Users
+    each PDF in users  
+      a(href=`/generate/pdf/${PDF}` download target='_blank')
+        article.document-canvas
+          span.document-value
+            span= PDF
+            span
+              i.fas.fa-cloud-download-alt
+    hr
+
+  // ======= Footer =======
+  include parts/footer.pug
+  // End Footer
+
+// ======= Scripts =======
+include parts/scripts.pug
+// End Scripts

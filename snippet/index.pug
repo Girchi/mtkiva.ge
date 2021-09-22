@@ -1,0 +1,261 @@
+// ======= Head =======
+include parts/head.pug
+// End Head
+
+// Template CSS Files
+link(href='assets/css/style.css' rel='stylesheet')
+
+script.
+  if(!{JSON.stringify(isTokenExpired)} === 'expired'){
+    window.localStorage.clear()
+    window.location = '/';
+  }
+
+// ======= Header =======
+include parts/header.pug
+// End Header
+
+// ======= Hero Section =======
+section#hero.d-flex
+  .container.position-relative(data-aos='fade-up' data-aos-delay='100')
+    .row.justify-content-center
+      .col-xl-7.col-lg-9.text-center.hero-info
+        h1 ცხოვრება ტკივილის გარეშე
+        //- img.hero-img(src='assets/img/' alt='')
+        //- h2 ქვეტექსტი
+    .text-center
+      a.btn-get-started.scrollto#joinBtn(href='https://www.girchi.com/donate/project/amnistia') შემოგვიერთდი
+    .row.icon-boxes.justify-content-center
+      .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='100')
+        .icon-box
+          h4.title
+            a(href='') ქომაგი
+          p.description საზოგადოების წევრი, რომელიც თვლის რომ ტკივილის გაყუჩება ადამიანის უფლებაა.
+      .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='200')
+        .icon-box
+          h4.title
+            a(href='') ახლობელი
+          p.description საზოგადოების წევრი, რომლის ახლობელ ადამიანს აწუხებს ტკივილი და ვერ ახერხებს შესაბამისი ტკივილგამაყუჩებელი მედიკამენტების კანონიერად მოპოვებას.
+      .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='300')
+        .icon-box
+          h4.title
+            a(href='') ნარკომომხმარებელი
+          p.description საზოგადოების წევრი, რომელიც არალეგალურ ფარმაკოლოგიურ საშუალებებს ქრონიკული ტკივილის შესამსუბუქებლად მოიხმარს.
+      .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='400')
+        .icon-box
+          h4.title
+            a(href='') ექიმი (ნარკოლოგები, ონკოლოგები და ა.შ.)
+          p.description  საზოგადოების წევრი, რომელიც პროფესიულ მოვალეობად მიიჩნევს ადამიანისათვის ტკივილის შემსუბუქებაში დახმარებას.
+      .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='500')
+        .icon-box
+          h4.title
+            a(href='') პაციენტი
+          p.description საზოგადოების წევრი, რომელიც განურჩევლად ჯანმრთელობის პრობლემის ტიპისა საჭიროებს ტკივილის გაყუჩებას (მეტწილად ტერმინალურ სტადიაში მყოფი).
+      .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='600')
+        .icon-box
+          h4.title
+            a(href='') სამართალდამცავი
+          p.description საზოგადოების წევრი, რომელიც თვლის, რომ მისი ერთადერთი მოვალეობაა ადამიანის დაცვა ძალადობისგან.
+// End Hero
+main#main
+  // ======= About Section =======
+  section#about.about
+    .container(data-aos='fade-up')
+      .section-title
+        h2 ჩვენს შესახებ
+      .text-center
+        p
+          | ვთვლით, რომ ნებისმიერ ადამიანს აქვს უფლება აირჩიოს ტკივილის შემსუბუქების თუ გაყუჩების სასურველი მეთოდი, რათა ღირსეულად შეძლოს ცხოვრების გაგრძელება თუ მშვიდად გარდაცვალება, ამის მისაღწევად შეიქმნა საზოგადოება “მტკივა”. მიგვაჩნია, რომ აღნიშნული უფლების ნებისმიერი გზით შეზღუდვა ძალადობაა. თუ ადამიანის ტკივილის შემსუბუქება შესაძლებელია და ამას არ აკეთებ - ეს ბოროტებაა. 
+        //- a.btn-learn-more(href='constitution') კონსტიტუცია
+  // End About Section
+
+  // ======= About Video Section =======
+  section#about-video.about-video
+    .container(data-aos='fade-up')
+      .row.align-items-center
+        //- .col-lg-6.video-box.align-self-baseline(data-aos='fade-right' data-aos-delay='100')
+        //-   img.img-fluid(src='assets/img/about-video.jpg' alt='')
+        //-   a.glightbox.play-btn.mb-4(href='/' data-vbtype='video' data-autoplay='true')
+        .col-lg-12.pt-3.pt-lg-0.content.text-center(data-aos='fade-left' data-aos-delay='100')
+          h3.mb-4 მიზნები
+          ul
+            li
+              //- i.bx.bx-check-double
+              |   ტკივილგამაყუჩებლებზე ხელმისაწვდომობის უზრუნველყოფა ტკივილით დატანჯული ხალხისთვის.
+            li
+              //- i.bx.bx-check-double
+              |   ადამიანებს შეეძლოთ გადაწყვეტილება ტკივილგამაყუჩებლის გამოყენების შესახებ მიღონ თავად, მათთვის სანდო ექიმებთან ერთად.
+            li
+              //- i.bx.bx-check-double
+              |   საზოგადოებრივი ცნობიერების ამაღლება ტკივილის პრობლემისა და მისი მოგვარების აუცილებლობის შესახებ.
+  // End About Video Section
+
+  // ======= Testimonials Section =======
+  section#testimonials.testimonials
+    .container(data-aos='fade-up')
+      .section-title
+        h2 წევრები
+      .testimonials-slider.swiper-container(data-aos='fade-up' data-aos-delay='100')
+        #latestUsers.swiper-wrapper
+          ul#usersList.list-group
+          each user in usersList
+            .swiper-slide
+              .testimonial-item
+                a(href=`user/${user.id_number}`)
+                  img.testimonial-img(src=`${user.img}` alt='user image')
+                  h3= user.name
+                  h4.cleanWords= user.status
+        a.users-btn(href='users') სრული სია
+  // End Testimonials Section
+
+  // ======= Services Section =======
+  // section#services.services.section-bg
+    .container(data-aos='fade-up')
+      .section-title
+        h2 პრინციპები
+      .row
+        .col-lg-4.col-md-6.d-flex.align-items-stretch(data-aos='zoom-in' data-aos-delay='100')
+          .icon-box.iconbox-blue
+            h4
+              a(href='#') 
+            p
+              | 
+        .col-lg-4.col-md-6.d-flex.align-items-stretch.mt-4.mt-md-0(data-aos='zoom-in' data-aos-delay='200')
+          .icon-box.iconbox-orange
+            h4
+              a(href='') 
+            p
+              | 
+        .col-lg-4.col-md-6.d-flex.align-items-stretch.mt-4.mt-lg-0(data-aos='zoom-in' data-aos-delay='300')
+          .icon-box.iconbox-pink
+            h4
+              a(href='') 
+            p
+              | 
+        .col-lg-4.col-md-6.d-flex.align-items-stretch.mt-4(data-aos='zoom-in' data-aos-delay='100')
+          .icon-box.iconbox-yellow
+            h4
+              a(href='') 
+            p 
+        .col-lg-4.col-md-6.d-flex.align-items-stretch.mt-4(data-aos='zoom-in' data-aos-delay='200')
+          .icon-box.iconbox-red
+            h4
+              a(href='') 
+            p
+              | 
+        .col-lg-4.col-md-6.d-flex.align-items-stretch.mt-4(data-aos='zoom-in' data-aos-delay='300')
+          .icon-box.iconbox-teal
+            h4
+              a(href='') 
+            p 
+  // End Sevices Section
+
+  // ======= Team Section =======
+  section#team.team.section-bg
+    .container(data-aos='fade-up')
+      .section-title
+        h2 გუნდი
+      .row.justify-content-center.align-items-stretch
+        .col-lg-4.col-md-6.d-flex.justify-content-center.align-items-stretch(data-aos='fade-up' data-aos-delay='100')
+          .member
+            .member-img
+              img.img-fluid(src='assets/img/team/xvichia_iago.webp' alt='')
+              .social
+                a(href='https://www.facebook.com/KhvichiaI/' target="_blank")
+                  i.bi.bi-facebook
+                a(href='https://www.instagram.com/iagoterton/' target="_blank")
+                  i.bi.bi-instagram
+            .member-info
+              h4 იაგო ხვიჩია
+              span დამფუძნებელი
+        .col-lg-4.col-md-6.d-flex.justify-content-center.align-items-stretch(data-aos='fade-up' data-aos-delay='200')
+          .member
+            .member-img
+              img.img-fluid(src='assets/img/team/vakhtang-megrelishvili_57da63ee2b090-800x445-1.jpg' alt='')
+              .social
+                a(href='https://www.facebook.com/vakhomegrelishvili' target="_blank")
+                  i.bi.bi-facebook
+                a(href='https://ge.linkedin.com/in/vakhtang-megrelishvili-62287536' target="_blank")
+                  i.bi.bi-linkedin
+            .member-info
+              h4 ვახო მეგრელიშვილი
+              span საბჭოს წევრი
+        .col-lg-4.col-md-6.d-flex.justify-content-center.align-items-stretch(data-aos='fade-up' data-aos-delay='300')
+          .member
+            .member-img
+              img.img-fluid(src='assets/img/team/raqviasvili.jpg' alt='')
+              .social
+                a(href='https://www.facebook.com/rakviashvili.sandro/' target="_blank")
+                  i.bi.bi-facebook
+                a(href='https://www.instagram.com/alexander.rakviashvili/' target="_blank")
+                  i.bi.bi-instagram
+                a(href='https://ge.linkedin.com/in/alexander-rakviashvili-645a359a' target="_blank")
+                  i.bi.bi-linkedin
+            .member-info
+              h4 სანდრო რაქვიაშვილი
+              span საბჭოს წევრი
+  // End Team Section
+
+  // ======= Frequently Asked Questions Section =======
+  // section#faq.faq.section-bg
+    .container(data-aos='fade-up')
+      .section-title
+        h2 წევრობა
+        p მომხმარებლების ხშირად დასმული კითხვები
+      .faq-list
+        ul
+          li(data-aos='fade-up')
+            i.bx.bx-help-circle.icon-help
+            a.collapse(data-bs-toggle='collapse' data-bs-target='#faq-list-1')
+              | ვის შეუძლია გახდეს საზოგადოების წევრი
+              i.bx.bx-chevron-down.icon-show
+              i.bx.bx-chevron-up.icon-close
+            #faq-list-1.collapse.show(data-bs-parent='.faq-list')
+              p
+                | საზოგადოების წევრი შეუძლია გახდეს ნებისმიერ ადამიანს, ვინც ეთანხმება კონსტიტუციას და იხდის საწევროს.
+          li(data-aos='fade-up' data-aos-delay='200')
+            i.bx.bx-help-circle.icon-help
+            a.collapsed(data-bs-toggle='collapse' data-bs-target='#faq-list-3')
+              | წევრობის დამადასტურებელი დოკუმენტი
+              i.bx.bx-chevron-down.icon-show
+              i.bx.bx-chevron-up.icon-close
+            #faq-list-3.collapse(data-bs-parent='.faq-list')
+              p
+                | საზოგადოების წევრებს გადაეცემათ კანაფის მოყვარულის ბარათი, ხოლო იურიდიულ პირებს - პარტნიორთა მოწმობა.
+          li(data-aos='fade-up' data-aos-delay='300')
+            i.bx.bx-help-circle.icon-help
+            a.collapsed(data-bs-toggle='collapse' data-bs-target='#faq-list-4')
+              | ვინ არის აქტიური წევრი
+              i.bx.bx-chevron-down.icon-show
+              i.bx.bx-chevron-up.icon-close
+            #faq-list-4.collapse(data-bs-parent='.faq-list')
+              p
+                | საზოგადოების წევრს, რომელსაც დაფარული აქვს გასული თვის საწევრო გადასახადი, ითვლება აქტიურ წევრად.
+          li(data-aos='fade-up' data-aos-delay='400')
+            i.bx.bx-help-circle.icon-help
+            a.collapsed(data-bs-toggle='collapse' data-bs-target='#faq-list-5')
+              | რამდენია მინიმალური საწევრო
+              i.bx.bx-chevron-down.icon-show
+              i.bx.bx-chevron-up.icon-close
+            #faq-list-5.collapse(data-bs-parent='.faq-list')
+              p
+                | მინიმალურ საწევრო შემოწირულობას წარმოადგენს 1 (ერთი) ლარი.
+          li(data-aos='fade-up' data-aos-delay='500')
+            i.bx.bx-help-circle.icon-help
+            a.collapsed(data-bs-toggle='collapse' data-bs-target='#faq-list-6')
+              | ინფორმაცია წევრებზე
+              i.bx.bx-chevron-down.icon-show
+              i.bx.bx-chevron-up.icon-close
+            #faq-list-6.collapse(data-bs-parent='.faq-list')
+              p
+                | საზოგადოების წევრთა ვინაობა და მათი წვლილი საზოგადოებაში წარმოადგენს საჯარო ინფორმაციას.
+  // End Frequently Asked Questions Section
+// End #main
+
+// ======= Footer =======
+include parts/footer.pug
+// End Footer
+
+// ======= Scripts =======
+include parts/scripts.pug
+// End Scripts

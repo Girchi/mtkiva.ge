@@ -1,0 +1,34 @@
+// ======= Head =======
+include parts/head.pug
+// End Head
+
+// Template CSS Files
+link(href='/assets/css/style.css' rel='stylesheet')
+link(href='/assets/css/user.css' rel='stylesheet')
+
+// ======= Header =======
+include parts/header.pug
+// End Header
+
+// User Search
+.user-search.container
+  h5 მომხმარებლები
+  input#searchInput(type='text' placeholder='ძიება....')
+  ul#usersList
+    each user in usersList
+      li
+        a.list-user(href=`user/${user.id_number}`)
+          img.user-img(src= user.img)
+          span.user-name= user.name
+  br
+  p#underUl= `სულ მომხმარებელთა რაოდენობა - ${usersList.length}` 
+                  
+// ======= Footer =======
+include parts/footer.pug
+// End Footer
+
+// ======= Scripts =======
+include parts/scripts.pug
+// End Scripts
+
+script(src='/assets/js/searchFilter.js')

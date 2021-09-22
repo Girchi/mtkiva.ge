@@ -1,0 +1,27 @@
+header#header.fixed-top
+  .container.d-flex.align-items-center.justify-content-between
+    h1.logo
+      a(href='/')
+        //- img(src='/assets/img/' alt='')
+    nav#navbar.navbar
+      ul
+        li
+          a.nav-link.scrollto.active(href='/#hero') მთავარი
+        li
+          a.nav-link.scrollto(href='/#about') ჩვენს შესახებ
+        li
+          a.nav-link.scrollto(href='/#testimonials') წევრები
+        //- li
+        //-   a.nav-link.scrollto(href='/#services') პრინციპები
+        li
+          a.nav-link.scrollto(href='/#team') გუნდი
+        //- li
+        //-   a.nav-link.scrollto(href='/#faq') წევრობა
+        li
+          button.getstarted.login-btn#loginBtn ავტორიზაცია
+        li 
+          a.login-info#loginInfo(href="/redirect")
+        li
+          button.logout-btn#logoutBtn Log Out
+
+      i.bi.bi-list.mobile-nav-toggle
