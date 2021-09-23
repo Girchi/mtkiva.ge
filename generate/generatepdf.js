@@ -6,7 +6,7 @@ import isCorrupted from 'is-corrupted-jpeg';
 const generatepdf = async () => {
 try {
   fs.readdirSync("./generate/pdf").forEach(file => { 
-    fs.unlink(`./generate/pdf/${file}`, err => { if (err) throw err; }); 
+    if(file != ".gitkeep") fs.unlink(`./generate/pdf/${file}`, err => { if (err) throw err; }); 
   })
 
   let leftCards = leftCardNums();
@@ -19,23 +19,23 @@ try {
 
     // Set parameters
     let parameters = { 
-      // sizes: {
-      //   bgWidth: 595.44,
-      //   bgHeight: 841.92,
-      //   cardWidth: 163.6,
-      //   cardHeight: 257.76,
-      // },
-      // positions: {
-      //   offsetY: 177.5,
-      //   frontPosX: 286.5,
-      //   backPosX: 309,
-      //   decValueY: 162.5,
-      //   offsetYBack: 163,
-      // },
-      // orientations: {
-      //   frontDegree: 90,
-      //   backDegree: -90,
-      // }
+      sizes: {
+        bgWidth: 595.44,
+        bgHeight: 841.92,
+        cardWidth: 163.6,
+        cardHeight: 257.76,
+      },
+      positions: {
+        offsetY: 177.5,
+        frontPosX: 286.5,
+        backPosX: 309,
+        decValueY: 162.5,
+        offsetYBack: 163,
+      },
+      orientations: {
+        frontDegree: 90,
+        backDegree: -90,
+      }
     }, jpgImageBytes, jpgImage;
 
     // Set background into document
@@ -115,8 +115,15 @@ function leftCardNums() {
   .map(card => card.replace('-front.jpg','').replace('-back.jpg',''))
 
   let unDublicate = [];
+
   for(let card of databaseCards){
-    if(!unDublicate.includes(card)) unDublicate.push(card)
+    const frontPath = `./generate/card-imgs/${card}-front.jpg`;
+    const backPath = `./generate/card-imgs/${card}-back.jpg`;
+    const existImages = fs.existsSync(frontPath) && fs.existsSync(backPath);
+    
+    if(existImages && !unDublicate.includes(card)){
+      unDublicate.push(card)
+    }
   }
 
   const directory = fs.readdirSync("./generate/pdf")
@@ -133,5 +140,6 @@ function leftCardNums() {
   return leftCards;
 
 }
+
 
 export default generatepdf;
