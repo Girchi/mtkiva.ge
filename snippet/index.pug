@@ -20,8 +20,10 @@ section#hero.d-flex
   .container.position-relative(data-aos='fade-up' data-aos-delay='100')
     .row.justify-content-center
       .col-xl-7.col-lg-9.text-center.hero-info
-        h1 ცხოვრება ტკივილის გარეშე
-        //- img.hero-img(src='assets/img/' alt='')
+        h1 ცხოვრება 
+          br
+          | ტკივილის გარეშე
+        img.hero-img(src='assets/img/logo.png' alt='')
         //- h2 ქვეტექსტი
     .text-center
       a.btn-get-started.scrollto#joinBtn(href='https://www.girchi.com/donate/project/amnistia') შემოგვიერთდი
@@ -35,7 +37,7 @@ section#hero.d-flex
         .icon-box
           h4.title
             a(href='') ახლობელი
-          p.description საზოგადოების წევრი, რომლის ახლობელ ადამიანს აწუხებს ტკივილი და ვერ ახერხებს შესაბამისი ტკივილგამაყუჩებელი მედიკამენტების კანონიერად მოპოვებას.
+          p.description საზოგადოების წევრი, რომლის ახლობელ ადამიანსაც აწუხებს ტკივილი, მაგრამ ვერ ახერხებს მისთვის შესაბამისი ტკივილგამაყუჩებელი მედიკამენტების კანონიერად მოპოვებას.
       .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='300')
         .icon-box
           h4.title
@@ -50,19 +52,19 @@ section#hero.d-flex
         .icon-box
           h4.title
             a(href='') პაციენტი
-          p.description საზოგადოების წევრი, რომელიც განურჩევლად ჯანმრთელობის პრობლემის ტიპისა საჭიროებს ტკივილის გაყუჩებას (მეტწილად ტერმინალურ სტადიაში მყოფი).
+          p.description საზოგადოების წევრი, რომელიც განურჩევლად ჯანმრთელობის პრობლემის ტიპისა, საჭიროებს ტკივილის გაყჩებას (მეტწილად ტერმინალურ სტადიაში მყოფი).
       .col-md-6.col-lg-4.d-flex.align-items-stretch.mb-4(data-aos='zoom-in' data-aos-delay='600')
         .icon-box
           h4.title
             a(href='') სამართალდამცავი
-          p.description საზოგადოების წევრი, რომელიც თვლის, რომ მისი ერთადერთი მოვალეობაა ადამიანის დაცვა ძალადობისგან.
+          p.description საზოგადოების წევრი, რომელიც თვლის, რომ მისი ერთადერთი მოვალეობა ადამიანის ძალადობისგან დაცვაა.
 // End Hero
 main#main
   // ======= About Section =======
   section#about.about
     .container(data-aos='fade-up')
       .section-title
-        h2 ჩვენს შესახებ
+        h2 ჩვენ შესახებ
       .text-center
         p
           | ვთვლით, რომ ნებისმიერ ადამიანს აქვს უფლება აირჩიოს ტკივილის შემსუბუქების თუ გაყუჩების სასურველი მეთოდი, რათა ღირსეულად შეძლოს ცხოვრების გაგრძელება თუ მშვიდად გარდაცვალება, ამის მისაღწევად შეიქმნა საზოგადოება “მტკივა”. მიგვაჩნია, რომ აღნიშნული უფლების ნებისმიერი გზით შეზღუდვა ძალადობაა. თუ ადამიანის ტკივილის შემსუბუქება შესაძლებელია და ამას არ აკეთებ - ეს ბოროტებაა. 
@@ -76,17 +78,18 @@ main#main
         //- .col-lg-6.video-box.align-self-baseline(data-aos='fade-right' data-aos-delay='100')
         //-   img.img-fluid(src='assets/img/about-video.jpg' alt='')
         //-   a.glightbox.play-btn.mb-4(href='/' data-vbtype='video' data-autoplay='true')
-        .col-lg-12.pt-3.pt-lg-0.content.text-center(data-aos='fade-left' data-aos-delay='100')
-          h3.mb-4 მიზნები
+        .col-lg-12.pt-3.pt-lg-0.content(data-aos='fade-left' data-aos-delay='100')
+          .section-title
+            h2 მიზნები
           ul
             li
-              //- i.bx.bx-check-double
+              i.bx.bx-check-double
               |   ტკივილგამაყუჩებლებზე ხელმისაწვდომობის უზრუნველყოფა ტკივილით დატანჯული ხალხისთვის.
             li
-              //- i.bx.bx-check-double
-              |   ადამიანებს შეეძლოთ გადაწყვეტილება ტკივილგამაყუჩებლის გამოყენების შესახებ მიღონ თავად, მათთვის სანდო ექიმებთან ერთად.
+              i.bx.bx-check-double
+              |   ტკივილგამაყუჩებლის გამოყენება ადამიანებმა თავად გადაწყვიტონ, მათთვის სანდო ექიმებთან ერთად.
             li
-              //- i.bx.bx-check-double
+              i.bx.bx-check-double
               |   საზოგადოებრივი ცნობიერების ამაღლება ტკივილის პრობლემისა და მისი მოგვარების აუცილებლობის შესახებ.
   // End About Video Section
 

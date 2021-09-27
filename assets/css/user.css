@@ -38,6 +38,7 @@
 
 .user-search {
   margin-top: 2rem;
+  color: var(--primary-color);
 }
 
 .list-user {
@@ -63,7 +64,7 @@
   grid-template-columns: 1fr 9fr 1fr;
   justify-content: space-between;
   align-items: center;
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 50vh 0;
 }
 
 .profile-header .user-img {
@@ -78,11 +79,15 @@
   margin-left: 32px;
 }
 
+.profile-header .user-text h4{
+  color: var(--primary-color);
+}
+
 .profile-header .user-text .main-status {
   display: inline-block;
   padding: 3px 8px;
   border-radius: 4px;
-  background: #2e6631;
+  background: var(--primary-color);
   color: #ffffff;
 }
 
