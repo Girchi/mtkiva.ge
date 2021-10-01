@@ -13,6 +13,7 @@ include parts/header.pug
 // User Search
 .user-search.container
   h5 მომხმარებლები
+  p#underUl= `სულ მომხმარებელთა რაოდენობა - ${usersList.length}` 
   input#searchInput(type='text' placeholder='ძიება....')
   ul#usersList
     each user in usersList
@@ -21,7 +22,6 @@ include parts/header.pug
           img.user-img(src= user.img)
           span.user-name= user.name
   br
-  p#underUl= `სულ მომხმარებელთა რაოდენობა - ${usersList.length}` 
                   
 // ======= Footer =======
 include parts/footer.pug

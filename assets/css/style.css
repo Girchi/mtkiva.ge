@@ -1,9 +1,11 @@
 @import url("//cdn.web-fonts.ge/fonts/bpg-arial/css/bpg-arial.min.css");
 
 :root {
-  --primary-color: #291036;
+  /* --primary-color: #291036; */
+  --primary-color: #170B3B;
   --secondary-color: #81212f;
-  --text-color: #8a616f;
+  /* --text-color: #8a616f; */
+  --text-color: #4A4453;
   --darkgray-color: #333;
   --bg-color: #fafafa;
 }
@@ -519,7 +521,7 @@ h6 {
   overflow: hidden;
   background: #fff;
   box-shadow: 0 0 29px 0 rgba(18, 66, 101, 0.08);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out;
   border-radius: 8px;
   z-index: 1;
 }
@@ -556,7 +558,12 @@ h6 {
 }
 
 #hero .icon-box:hover .title a {
-  color: var(--secondary-color);
+  color: #9D293A;
+}
+
+.icon-box:hover, .description p {
+  color: #2E2584;
+  /* color: #215F81; */
 }
 
 @media (min-width: 1024px) {
