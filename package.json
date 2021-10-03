@@ -1,21 +1,21 @@
 {
   "name": "mtkiva",
   "type": "module",
-  "version": "1.0.0",
-  "description": "cxovreba tkivilis gareshe",
+  "version": "1.1.0",
+  "description": "life without pain",
   "scripts": {
     "start": "nodemon app.js"
   },
   "author": "girchi",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.22.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "form-data": "^4.0.0",
     "https": "^1.0.0",
     "is-corrupted-jpeg": "^1.0.2",
     "multer": "^1.4.2",
-    "node-fetch": "^2.6.1",
     "node-html-to-image": "^3.2.0",
     "nodemon": "^2.0.12",
     "pdf-lib": "^1.16.0",

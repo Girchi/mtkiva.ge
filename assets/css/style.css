@@ -2121,6 +2121,8 @@ section {
   padding: 5px 10px !important;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
+  height: 59px;
+  min-width: 120px;
 }
 
 .login-info:hover {

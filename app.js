@@ -4,11 +4,10 @@ import { dirname } from "path";
 import * as fs from "fs";
 import bodyParser from "body-parser";
 import multer from "multer";
-import fetch from "node-fetch";
+import axios from "axios";
 import https from "https";
 import FormData from 'form-data';
 import dotenv from "dotenv";
-dotenv.config();
 import sharp from "sharp";
 
 // Grab Custom Functions
@@ -21,6 +20,9 @@ const upload = multer({ storage });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+dotenv.config();
+const axiosInstance = axios.create({ baseURL: process.env.DRUPAL_DOMAIN })
+
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set("view engine", "pug");
@@ -28,11 +30,11 @@ app.use("/assets", express.static("assets"));
 app.use("/generate", express.static("generate"));
 
 // Local SSL Connection
-// https.createServer({
-//     key: fs.readFileSync(process.env.SSL_KEY),
-//     cert: fs.readFileSync(process.env.SSL_CERT)
-//   }, app).listen(8000);
-// console.log(`Connection With SSH https://localhost:8000`)
+https.createServer({
+    key: fs.readFileSync(process.env.SSL_KEY),
+    cert: fs.readFileSync(process.env.SSL_CERT)
+  }, app).listen(8000);
+console.log(`Connection With SSH https://localhost:8000`)
 
 app.listen(3000)
 console.log(`Default Connection http://localhost:3000`)
@@ -101,103 +103,157 @@ app.get("/create-card", (req, res) => {
 // User verify and save data
 app.post( "/create-card", [urlencodedParser, upload.single("image")], async (req, res) => {
   try {
-    const authConnect = await fetch(`${process.env.GIRCHI_DOMAIN}/jsonapi`, { cache: 'no-cache', headers: { 'Authorization': req.body.token } });
-    const authResponse = await authConnect.json();
+    const drupalResponse = await axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': req.body.token } } );
 
-    if(authResponse.meta){
-      const drupalID = authResponse.meta.links.me.meta.id;
-
+    // If user logged correctly
+    if(drupalResponse.data.meta){
+      
       if(req.body.other_statuses == null) req.body.other_statuses = [];
       if(typeof req.body.other_statuses !== "object") req.body.other_statuses = [req.body.other_statuses];
 
-      delete req.body.token;
-      req.body.drupal_id = drupalID;
-      req.body.img = `/assets/img/users-images/${req.file.originalname}`;
-      req.body.name = convertLetters(req.body.name, 'geo');
-      req.body.registration = new Date().toISOString().slice(0, 10);
+      const fullName = convertLetters(req.body.name, 'geo').trim().split(/[ ]+/gi);
+      const idNumTaken = fs.existsSync(`./database/${req.body.id_number}.json`);
 
-      const userByIdNum = fs.existsSync(`./database/${req.body.id_number}.json`)
-      const saveUser = async (details) => {
-        await sharp(req.file.buffer).rotate().resize({width: 1000}).toFile(`./assets/img/users-images/${req.file.originalname}`);
-        fs.writeFileSync(`./database/${details.id_number}.json`, JSON.stringify(details), err => { if(err) console.log(err) })
-        res.redirect(`/user/${details.id_number}`);
-        // cardtoimg(details)
+      req.body.drupal_id = drupalResponse.data.meta.links.me.meta.id;
+      req.body.img = `/assets/img/users-images/${req.file.originalname}`;
+      req.body.name = fullName.join(" ");
+      req.body.registration = new Date().toISOString().slice(0, 10);
+     
+      async function userSaveToDrupal(details, firstName, lastName) {
+        // Save user into drupal base
+        try {
+          const config = {
+            headers: {
+              "Content-Type": "application/vnd.api+json",
+              "Accept": "application/vnd.api+json",
+              'Authorization': details.token,
+            }
+          };
+          const body = {
+            data: {
+                type: "user--user",
+                id: details.drupal_id,
+                attributes: {
+                    field_first_name: firstName,
+                    field_last_name: lastName,
+                    field_personal_id: details.id_number,
+                    field_date_of_birth: details.birth_date,
+                }
+            }
+          };
+          await axiosInstance.patch(`/jsonapi/user/user/${details.drupal_id}`, body, config );
+        } catch (err) {
+          console.log(err)
+        }
       }
 
-      if(userByIdNum){
+      async function userSaveToServer(details) {
+        // Save user to Server
+        try {
+          // Optimize image before save
+          await sharp(req.file.buffer).rotate()
+          .resize({width: 1000})
+          .toFile(`./assets/img/users-images/${req.file.originalname}`);
+
+          delete details.token;
+          fs.writeFileSync(`./database/${details.id_number}.json`, JSON.stringify(details), err => { if(err) console.log(err) })
+          res.redirect(`/user/${details.id_number}`);
+
+          // Create card image
+
+          // Temoparay disabled before get card design
+          // cardtoimg(details)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
+      // If id number already exists on server
+      if(idNumTaken){
 
         const userData = JSON.parse(fs.readFileSync(`./database/${req.body.id_number}.json`, 'utf8'));
-        if(userData.drupal_id === drupalID){
+        if(userData.drupal_id === req.body.drupal_id){
           req.body.card_number = userData.card_number;
-          saveUser(req.body)
+          userSaveToDrupal(req.body, fullName[0], fullName[fullName.length - 1]);
+          userSaveToServer(req.body);
         } else {
           console.log('id number already used')
           res.redirect('/create-card')
         }
-
+  
       } else {
-
+        // Delete past user info file on server
         fs.readdirSync("./database").filter(userJSON => {
           userJSON = JSON.parse(fs.readFileSync(`./database/${userJSON}`, 'utf8'));
-          if(userJSON.drupal_id === drupalID) fs.unlink(`./database/${userJSON.id_number}.json`, (err) => console.log(err));
-        })
-
+          if(userJSON.drupal_id === req.body.drupal_id) fs.unlink(`./database/${userJSON.id_number}.json`, (err) => console.log(err));
+        });
         req.body.card_number = nextCardNum();
-        saveUser(req.body)
+        userSaveToDrupal(req.body, fullName[0], fullName[fullName.length - 1]);
+        userSaveToServer(req.body);
       }
 
     } else {
-      console.log(`Authorization Problems`)
-      res.redirect('/?param1=expired')
+    // If user is not logged
+      res.redirect('/create-card')
     }
-
+    
   } catch (err) {
-    console.log(`error: ${err}`)
-    res.redirect('/create-card')
+    // If token is not valid
+    if(err.response.status === 401){
+      console.log('Token is not vaild')
+      res.redirect('/?param1=expired')
+    } else {
+      // if drupal side problems or else
+      console.log(err.message)
+      res.redirect('/create-card')
+    }
   }
 });
 
-
 // User Authorization
-app.post("/authorization/:accessToken&:expirationTime&:userID", async (req, res) => {
+app.get("/authorization/:authType/:token&:expirationTime&:userID", async (req, res) => {
 
   const formData = new FormData()
-  formData.append("grant_type", "facebook_login_grant");
+
+  switch (req.params.authType) {
+    case 'fb':
+      formData.append("grant_type", "facebook_login_grant");
+      formData.append("facebook_access_token", req.params.token);
+      formData.append("facebook_user_id", req.params.userID);
+      formData.append("facebook_token_expires_in", req.params.expirationTime);
+      break;
+    case 'refresh':
+      formData.append("grant_type", "refresh_token");
+      formData.append("refresh_token", req.params.token);
+      formData.append("client_id", process.env.CLIENT_ID);
+      formData.append("client_secret", process.env.SECRET_KEY);
+      break;
+    default:
+      console.log(req.params.authType);
+  } 
+
   formData.append("client_id", process.env.CLIENT_ID);
   formData.append("client_secret", process.env.SECRET_KEY);
-  formData.append("facebook_access_token", req.params.accessToken);
-  formData.append("facebook_user_id", req.params.userID);
-  formData.append("facebook_token_expires_in", req.params.expirationTime);
-
+  
   try {
     // Get user information
-    const fbConnect = await fetch(`${process.env.GIRCHI_DOMAIN}/oauth/token`, { method: 'POST', body: formData });
-    const fbResponse = await fbConnect.json();
-    const token = `Bearer ${fbResponse.access_token}`
+    const oauthTokens = await axiosInstance.post('/oauth/token', formData, { headers: formData.getHeaders() } );
+    const token = `Bearer ${oauthTokens.data.access_token}`;
+    const refreshToken = oauthTokens.data.refresh_token;
 
-    const authConnect = await fetch(`${process.env.GIRCHI_DOMAIN}/jsonapi`, { cache: 'no-cache', headers: { 'Authorization': token } });
-    const authResponse = await authConnect.json();
+    const drupalResponse = await axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': token } } );
 
-    const drupalID = authResponse.meta.links.me.meta.id
-    const userPath = authResponse.meta.links.me.href
+    const drupalID = drupalResponse.data.meta.links.me.meta.id
 
-    const userData = await fetch(userPath, { cache: 'no-cache', headers: { 'Authorization': token } });
-    const userDataRes = await userData.json();
+    const userResponse = await axiosInstance.get(`/jsonapi/user/user/${drupalID}`, { cache: 'no-cache', headers: { 'Authorization': token } } );
+    const userPictureResponse = await axiosInstance.get(`/jsonapi/user/user/${drupalID}/user_picture`, { cache: 'no-cache', headers: { 'Authorization': token } } );
 
-    const userLoginName = userDataRes.data.attributes.name
-    const userFirstName = userDataRes.data.attributes.field_first_name
-    const userLastName = userDataRes.data.attributes.field_last_name
-    const userImgLocation = userDataRes.data.relationships.user_picture.links.related.href
+    const userLoginName = userResponse.data.data.attributes.name
+    const userFirstName = userResponse.data.data.attributes.field_first_name
+    const userLastName = userResponse.data.data.attributes.field_last_name
+    const userPicture = userPictureResponse.data.data ? process.env.DRUPAL_DOMAIN + userPictureResponse.data.data.attributes.uri.url : `/assets/img/avatar.png`;
 
-    const userImg = await fetch(userImgLocation, { cache: 'no-cache', headers: { 'Authorization': token } });
-    const userImgRes = await userImg.json();
-
-    let userImgPath = userImgRes.data ?
-    `${process.env.GIRCHI_DOMAIN}${userImgRes.data.attributes.uri.url}` :
-    `/assets/img/avatar.png`;
-
-    const localStore = { token, drupalID, userImgPath, userFirstName, userLastName, userLoginName }
-
+    const localStore = { token, refreshToken, drupalID, userPicture, userFirstName, userLastName, userLoginName }
     res.send({localStore})   
 
   } catch (err) {
@@ -205,7 +261,6 @@ app.post("/authorization/:accessToken&:expirationTime&:userID", async (req, res)
     res.redirect('/')
   }
 });
-
 
 // Countitution Page
 app.get("/constitution", (req, res) => {
