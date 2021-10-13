@@ -30,11 +30,11 @@ app.use("/assets", express.static("assets"));
 app.use("/generate", express.static("generate"));
 
 // Local SSL Connection
-https.createServer({
-    key: fs.readFileSync(process.env.SSL_KEY),
-    cert: fs.readFileSync(process.env.SSL_CERT)
-  }, app).listen(8000);
-console.log(`Connection With SSH https://localhost:8000`)
+// https.createServer({
+//     key: fs.readFileSync(process.env.SSL_KEY),
+//     cert: fs.readFileSync(process.env.SSL_CERT)
+//   }, app).listen(8000);
+// console.log(`Connection With SSH https://localhost:8000`)
 
 app.listen(3000)
 console.log(`Default Connection http://localhost:3000`)
@@ -103,7 +103,7 @@ app.get("/create-card", (req, res) => {
 // User verify and save data
 app.post( "/create-card", [urlencodedParser, upload.single("image")], async (req, res) => {
   try {
-    const drupalResponse = await axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': req.body.token } } );
+    const drupalResponse = await axiosInstance.get('/jsonapi/', { cache: 'no-cache', headers: { 'Authorization': req.body.token } } );
 
     // If user logged correctly
     if(drupalResponse.data.meta){
@@ -225,8 +225,6 @@ app.get("/authorization/:authType/:token&:expirationTime&:userID", async (req, r
     case 'refresh':
       formData.append("grant_type", "refresh_token");
       formData.append("refresh_token", req.params.token);
-      formData.append("client_id", process.env.CLIENT_ID);
-      formData.append("client_secret", process.env.SECRET_KEY);
       break;
     default:
       console.log(req.params.authType);
@@ -241,7 +239,7 @@ app.get("/authorization/:authType/:token&:expirationTime&:userID", async (req, r
     const token = `Bearer ${oauthTokens.data.access_token}`;
     const refreshToken = oauthTokens.data.refresh_token;
 
-    const drupalResponse = await axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': token } } );
+    const drupalResponse = await axiosInstance.get('/jsonapi/', { cache: 'no-cache', headers: { 'Authorization': token } } );
 
     const drupalID = drupalResponse.data.meta.links.me.meta.id
 
@@ -256,9 +254,9 @@ app.get("/authorization/:authType/:token&:expirationTime&:userID", async (req, r
     const localStore = { token, refreshToken, drupalID, userPicture, userFirstName, userLastName, userLoginName }
     res.send({localStore})   
 
-  } catch (err) {
-    console.log(`error: ${err}`)
-    res.redirect('/')
+  } catch (error) {
+    console.log(error.message)
+    res.send(error.message)
   }
 });
 
