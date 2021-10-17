@@ -16,11 +16,11 @@ include parts/header.pug
   p#underUl= `სულ მომხმარებელთა რაოდენობა - ${usersList.length}` 
   input#searchInput(type='text' placeholder='ძიება....')
   ul#usersList
-    each user in usersList
-      li
-        a.list-user(href=`user/${user.id_number}`)
-          img.user-img(src= user.img)
-          span.user-name= user.name
+    //- each user in usersList
+    //-   li
+    //-     a.list-user(href=`user/${user.id_number}`)
+    //-       img.user-img(src= user.img)
+    //-       span.user-name= user.name
   br
                   
 // ======= Footer =======
@@ -32,3 +32,43 @@ include parts/scripts.pug
 // End Scripts
 
 script(src='/assets/js/searchFilter.js')
+
+script(type="module"). 
+  //- Infinite Scroll
+  let users = !{JSON.stringify(usersList)}
+
+  document.addEventListener("DOMContentLoaded", () => {
+    let options = {
+      root: null,
+      rootMargins: "0px",
+      threshold: 0.5
+    };    
+    const observer = new IntersectionObserver(handleIntersect, options);
+    observer.observe(document.querySelector("footer"));
+  
+    //an initial load of some data
+    getData();
+  });
+
+  function handleIntersect(entries) {
+    if (entries[0].isIntersecting) {
+      getData();
+    }
+  }
+
+  function getData() {
+    let usersContainer = document.querySelector("#usersList")
+    let usersCounter = usersContainer.childElementCount;
+    for(let i = usersCounter; i < usersCounter + 20; i++){
+      if(users[i]){
+        usersContainer.innerHTML += `
+          <li>
+            <a class="list-user" href="user/${users[i].id_number}">
+              <img class="user-img" src="${users[i].img}">
+              <span class="user-name">${users[i].name}</span>
+            </a>
+          </li>
+        `
+      }
+    }
+  }

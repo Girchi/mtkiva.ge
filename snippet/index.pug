@@ -5,12 +5,6 @@ include parts/head.pug
 // Template CSS Files
 link(href='assets/css/style.css' rel='stylesheet')
 
-script.
-  if(!{JSON.stringify(isTokenExpired)} === 'expired'){
-    window.localStorage.clear()
-    window.location = '/';
-  }
-
 // ======= Header =======
 include parts/header.pug
 // End Header

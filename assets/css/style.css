@@ -106,6 +106,28 @@ h6 {
   background: #fff;
 }
 
+.loading {
+  position: relative;
+
+}
+
+.loading::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% + 20px);
+
+  border: 6px solid var(--primary-color);
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  -webkit-animation: animate-preloader 1s linear infinite;
+  animation: animate-preloader 1s linear infinite;
+}
+
+
 #preloader:before {
   content: "";
   position: fixed;
@@ -215,9 +237,7 @@ h6 {
 .navbar a,
 .navbar a:focus,
 .navbar button,
-.navbar button:focus,
-.navbar .getstarted,
-.navbar .getstarted:focus {
+.navbar .getstarted {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -361,6 +381,14 @@ h6 {
   }
   .navbar ul {
     display: none;
+  }
+  .navbar .getstarted {
+    width: calc(100% - 30px);
+    margin: 0 auto;
+  }
+  .loading::before {
+    top: 5px;
+    left: calc(50% - 15px);
   }
 }
 

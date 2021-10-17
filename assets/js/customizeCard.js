@@ -70,3 +70,6 @@ const imageInput = document.getElementById("imageInput");
 imageInput.addEventListener("change", function () {
   // cardImage.src = URL.createObjectURL(this.files[0]);
 })
+
+
+// export { changeInputData, changeSelectData };

@@ -1,5 +1,9 @@
 node_modules/
 https-conf/
+**/database/*
+**/card-imgs/*
+**/pdf/*
+**/users-images/*
 
 *.html
 .env

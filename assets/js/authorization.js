@@ -1,3 +1,5 @@
+import convertLetters from "/assets/js/convertLetters.js";
+
 (async () => {
 
     const response = await axios.get('/assets/js/auth_config.json');
@@ -10,25 +12,36 @@
     // Set logged user credentials
     if(localStorage.getItem('UserDetails')){
         let userDetails = JSON.parse(localStorage.getItem('UserDetails'));
+        if(document.getElementById('loginBtn')) loginBtn.classList.add('disabled');
 
         try {
-
+            loader.classList.add('loading');
             const drupalResponse = await axiosInstance.get('/jsonapi/', { cache: 'no-cache', headers: { 'Authorization': userDetails.token } } );
+            loader.classList.remove('loading');
             if(drupalResponse.status === 200) setData(userDetails)
 
         } catch (error) {
-            if(error.response.status === 401){
+            if(error.response && error.response.status === 401){
             // Refresh token runs if access token is invalid
                 try {
+                    loader.classList.add('loading');
                     const serverResponse = await axios.get(`/authorization/refresh/${userDetails.refreshToken}&no&no`);
+                    loader.classList.remove('loading');
+
                     localStorage.setItem('UserDetails', JSON.stringify(serverResponse.data.localStore));
                     setData(serverResponse.data.localStore)
                     console.log('Storage refreshed')
                 } catch (error) {
                     console.log('Refresh token may be expired')
+                    loader.classList.remove('loading');
+                    loginBtn.classList.remove('disabled');
+                    window.localStorage.clear()       
                 }
             } else {
                 console.log('Unable to connect drupal')
+                loader.classList.remove('loading');
+                loginBtn.classList.remove('disabled');
+                window.localStorage.clear()            
             }
         }
     }
@@ -63,23 +76,32 @@
                     const accessToken = response.authResponse.accessToken;
                     const expirationTime = JSON.stringify(response.authResponse.data_access_expiration_time);
                     const userID = response.authResponse.userID;
-                    console.log(accessToken, expirationTime, userID)
+                    console.log(`FB Access Token: ${accessToken}, FB Expiration Time: ${expirationTime}, FB User ID: ${userID}`)
 
                     FB.api('/me/permissions', async (res) => {
                         const emailStatus = res.data.find(email => email.permission === 'email').status
                         if(emailStatus !== 'declined'){
                             console.log('Facebook SDK Works')
+
+                            let loader = document.getElementById('loader');
+
+                            loader.classList.add('loading');
+                            loginBtn.classList.add('disabled');
+
                             const serverResponse = await axios.get(`/authorization/fb/${accessToken}&${expirationTime}&${userID}`);
-                            
+                            loader.classList.remove('loading');
+
                             if(serverResponse.status === 200 && serverResponse.data.localStore !== undefined){
                                 setData(serverResponse.data.localStore)
                                 localStorage.setItem('UserDetails', JSON.stringify(serverResponse.data.localStore))
                             } else if(serverResponse.status === 200) {
                                 console.log('information cannot get properly from drupal')
                                 console.log(serverResponse.data)
+                                loginBtn.classList.remove('disabled');
                             } else {
                                 console.log('back side problem in authorization')
                                 console.log(serverResponse.data)
+                                loginBtn.classList.remove('disabled');
                             }
 
                         } else {
@@ -97,10 +119,8 @@
     // Sets user drupal data into page
     function setData(localStore){
 
-        if(document.getElementById('loginBtn')) loginBtn.classList.add('disabled');
         if(document.getElementById('loginInfo')) loginInfo.classList.add('login-info-active');
         if(document.getElementById('logoutBtn')) logoutBtn.classList.add('logout-btn-active');
-        if(document.getElementById('hiddenToken')) hiddenToken.value = localStore.token;
 
         logoutBtn.addEventListener('click', () => {
             window.localStorage.clear()            
@@ -127,6 +147,22 @@
         `
 
         loginInfo.href = `/redirect/${localStore.drupalID}`
+
+
+        // Handle CardForm
+        if(document.getElementById('cardForm')){
+
+            nameInput.value = userName;
+            hiddenToken.value = localStore.token;
+            idNumInput.value = localStore.userPersonalId;
+            dateInput.value = localStore.userDateOfBirth;
+
+            // const cardFullName = document.querySelectorAll("#cardFullName");
+            // cardFullName[0].textContent = convertLetters(userName, 'geo');
+            // cardFullName[1].textContent = convertLetters(userName);
+            // cardIdNum.textContent = localStore.userPersonalId;
+            // cardDate.textContent = localStore.userDateOfBirth;
+        }
     }
 
 })()
