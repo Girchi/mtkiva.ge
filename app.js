@@ -134,7 +134,7 @@ app.post( "/create-card", [urlencodedParser, upload.single("image")], async (req
           };
           await axiosInstance.patch(`/jsonapi/user/user/${details.drupal_id}`, body, config );
         } catch (err) {
-          console.log(err)
+          console.log(err.message)
         }
       }
 

@@ -44,7 +44,7 @@ script(type="module").
       threshold: 0.5
     };    
     const observer = new IntersectionObserver(handleIntersect, options);
-    observer.observe(document.querySelector("footer"));
+    observer.observe(document.querySelector("#usersList"));
   
     //an initial load of some data
     getData();
