@@ -30,11 +30,13 @@ app.use('/assets', express.static('assets'));
 app.use('/generate', express.static('generate'));
 
 // Local SSL Connection
-// https.createServer({
-//     key: fs.readFileSync(process.env.SSL_KEY),
-//     cert: fs.readFileSync(process.env.SSL_CERT)
-//   }, app).listen(8000);
-// console.log(`Connection With SSH https://localhost:8000`)
+if(process.env.ENVIROMENT === 'local'){
+  https.createServer({
+    key: fs.readFileSync(process.env.SSL_KEY),
+    cert: fs.readFileSync(process.env.SSL_CERT)
+  }, app).listen(8000);
+console.log(`Connection With SSH https://localhost:8000`)
+}
 
 app.listen(3000);
 console.log(`Default Connection http://localhost:3000`);

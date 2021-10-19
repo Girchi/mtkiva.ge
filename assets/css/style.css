@@ -478,12 +478,12 @@ h6 {
 --------------------------------------------------------------*/
 #hero {
   width: 100%;
-  /* height: 100vh; */
   position: relative;
   background: url("../img/hero-bg.jpg") top center;
   background-size: cover;
   position: relative;
   margin-top: -1rem;
+  padding: 40px 0 80px;
 }
 
 #hero:before {
