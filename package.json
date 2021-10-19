@@ -17,7 +17,6 @@
     "is-corrupted-jpeg": "^1.0.2",
     "multer": "^1.4.2",
     "node-html-to-image": "^3.2.0",
-    "nodemon": "^2.0.12",
     "pdf-lib": "^1.16.0",
     "pug": "^3.0.2",
     "qrcode": "^1.4.4",

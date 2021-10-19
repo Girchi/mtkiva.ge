@@ -94,7 +94,7 @@ app.get('/create-card', (req, res) => {
 // User verify and save data
 app.post( "/create-card", [urlencodedParser, upload.single("image")], async (req, res) => {
 
-  axiosInstance.get('/jsonapi/', { cache: 'no-cache', headers: { 'Authorization': req.body.token } } )
+  axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': req.body.token } } )
   .then((response) => {
     // If user is logged successfully
     if(response && response.data.meta){
@@ -162,12 +162,12 @@ app.post( "/create-card", [urlencodedParser, upload.single("image")], async (req
       if(idNumTaken){
 
         const userData = JSON.parse(fs.readFileSync(`./database/${req.body.id_number}.json`, 'utf8'));
-        if(userData.drupal_id === req.body.drupal_id){
+        if(userData.drupal_id === req.body.drupal_id || userData.drupal_id === ''){
           req.body.card_number = userData.card_number;
           userSaveToDrupal(req.body, fullName[0], fullName[fullName.length - 1]);
           userSaveToServer(req.body);
         } else {
-          console.log('Someone is trying to use Personal ID that is already in use')
+          console.log(`${req.body.drupal_id} is trying to use Personal ID ${req.body.id_number} that is already in use`)
           res.redirect('back')
         }
   
@@ -223,7 +223,7 @@ app.get("/authorization/:authType/:token&:expirationTime&:userID", async (req, r
     const oauthTokens = await axiosInstance.post('/oauth/token', formData, { headers: formData.getHeaders() } );
     const token = `Bearer ${oauthTokens.data.access_token}`;
 
-    const drupalResponse = await axiosInstance.get('/jsonapi/', { cache: 'no-cache', headers: { 'Authorization': token } } );
+    const drupalResponse = await axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': token } } );
 
     const drupalID = drupalResponse.data.meta.links.me.meta.id
 

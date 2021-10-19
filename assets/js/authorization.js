@@ -16,7 +16,7 @@ import convertLetters from "/assets/js/convertLetters.js";
 
         try {
             loader.classList.add('loading');
-            const drupalResponse = await axiosInstance.get('/jsonapi/', { cache: 'no-cache', headers: { 'Authorization': userDetails.token } } );
+            const drupalResponse = await axiosInstance.get('/jsonapi', { cache: 'no-cache', headers: { 'Authorization': userDetails.token } } );
             loader.classList.remove('loading');
             if(drupalResponse.status === 200) setData(userDetails)
 
@@ -32,13 +32,13 @@ import convertLetters from "/assets/js/convertLetters.js";
                     setData(serverResponse.data.localStore)
                     console.log('Storage refreshed')
                 } catch (error) {
-                    console.log('Refresh token may be expired')
+                    console.log(error.message)
                     loader.classList.remove('loading');
                     loginBtn.classList.remove('disabled');
                     window.localStorage.clear()       
                 }
             } else {
-                console.log('Unable to connect drupal')
+                console.log(`Unable to connect drupal ${error}`)
                 loader.classList.remove('loading');
                 loginBtn.classList.remove('disabled');
                 window.localStorage.clear()            
