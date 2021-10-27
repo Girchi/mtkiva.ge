@@ -35,12 +35,16 @@ import convertLetters from "/assets/js/convertLetters.js";
                     console.log(error.message)
                     loader.classList.remove('loading');
                     loginBtn.classList.remove('disabled');
+                    loginInfo.classList.remove('login-info-active');
+                    logoutBtn.classList.remove('logout-btn-active');
                     window.localStorage.clear()       
                 }
             } else {
                 console.log(`Unable to connect drupal ${error}`)
                 loader.classList.remove('loading');
                 loginBtn.classList.remove('disabled');
+                loginInfo.classList.remove('login-info-active');
+                logoutBtn.classList.remove('logout-btn-active');
                 window.localStorage.clear()            
             }
         }

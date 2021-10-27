@@ -17,32 +17,12 @@ body
       button.btn.btn-success(type='submit') Regenerate Documents
 
     hr
-    h2 Important
-    each PDF in important
-      a(href=`/generate/pdf/${PDF}` download target='_blank')
-        article.document-canvas
-          span.document-value
-            span= PDF
-            span
-              i.fas.fa-cloud-download-alt
-    hr
 
-    h2 Staff
-    each PDF in staff  
-      a(href=`/generate/pdf/${PDF}` download target='_blank')
+    each document in documentsDir  
+      a(href=`/generate/pdf/${document}` download target='_blank')
         article.document-canvas
           span.document-value
-            span= PDF
-            span
-              i.fas.fa-cloud-download-alt
-    hr
-
-    h2 Users
-    each PDF in users  
-      a(href=`/generate/pdf/${PDF}` download target='_blank')
-        article.document-canvas
-          span.document-value
-            span= PDF
+            span= document
             span
               i.fas.fa-cloud-download-alt
     hr
