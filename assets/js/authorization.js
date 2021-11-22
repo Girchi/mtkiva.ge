@@ -51,7 +51,10 @@ import convertLetters from "/assets/js/convertLetters.js";
     }
 
     // User facebook login event
-    document.getElementById('loginBtn').addEventListener('click', facebookAuth)
+    const loginButtons = document.getElementsByClassName('login-btn')
+    for(let button of loginButtons){
+        button.addEventListener('click', facebookAuth)
+    }
 
     function facebookAuth(){
 
@@ -132,6 +135,19 @@ import convertLetters from "/assets/js/convertLetters.js";
             if(document.getElementById('loginInfo')) loginInfo.classList.remove('login-info-active');
             if(document.getElementById('logoutBtn')) logoutBtn.classList.remove('logout-btn-active');
             if(document.getElementById('hiddenToken')) hiddenToken.value = '';
+
+            if(document.getElementById('nameInput')) nameInput.value = '';
+            if(document.getElementById('surnameInput')) surnameInput.value = '';
+            if(document.getElementById('personalNumInput')) personalNumInput.value = '';
+            if(document.getElementById('phoneNumInput')) phoneNumInput.value = '';
+            if(document.getElementById('emailInput')) emailInput.value = '';
+
+            
+            // Handle Logout for Petition Page 
+            if(document.getElementById('formPetition')){
+                options.style.display = 'block';
+                noAuthSign.appendChild(formPetition)
+            }
         })
 
         let userName;
@@ -166,6 +182,26 @@ import convertLetters from "/assets/js/convertLetters.js";
             // cardFullName[1].textContent = convertLetters(userName);
             // cardIdNum.textContent = localStore.userPersonalId;
             // cardDate.textContent = localStore.userDateOfBirth;
+        }
+
+
+        // Handle Petition Page
+        if(document.getElementById('formPetition')){
+
+            petitionContainer.appendChild(formPetition)
+            options.style.display = 'none';
+
+            nameInput.value = localStore.userFirstName;
+            surnameInput.value = localStore.userLastName;
+
+            if(!localStore.userFirstName && !localStore.userLastName){
+                nameInput.value = userName;
+            }
+
+            hiddenToken.value = localStore.token;
+            personalNumInput.value = localStore.userPersonalId;
+            phoneNumInput.value = localStore.userPhoneNumber;
+            emailInput.value = localStore.userEmail;
         }
     }
 

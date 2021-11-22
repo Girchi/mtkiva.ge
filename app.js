@@ -244,7 +244,8 @@ app.get("/authorization/:authType/:token&:expirationTime&:userID", async (req, r
       userDateOfBirth: userResponse.data.data.attributes.field_date_of_birth,
       userPersonalId: userResponse.data.data.attributes.field_personal_id,
       userPicture: userPictureResponse.data.data ? process.env.DRUPAL_DOMAIN + userPictureResponse.data.data.attributes.uri.url : `/assets/img/avatar.png`,
-
+      userPhoneNumber: userResponse.data.data.attributes.field_tel,
+      userEmail: userResponse.data.data.attributes.mail,
     }
 
     res.send({localStore})   
@@ -272,6 +273,43 @@ app.post('/cards-download', (req, res) => {
 			res.redirect('/cards-download');
 		})
 		.catch((err) => console.log(err));
+});
+
+// Petition Page
+app.get("/petition", (req, res) => {
+  res.render(__dirname + "/snippet/petition", { responseStatus: null });
+});
+
+app.post("/petition", upload.none(), async (req, res) => {
+  let responseStatus;
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": req.body.token,
+        "X-CSRF-Token": await getSessionToken()
+      }
+    };
+    const body = {
+      "webform_id": "petitsiis_shevseba",
+      "name": req.body.name,
+      "surname": req.body.surname,
+      "email": req.body.email,
+      "personal_number": req.body.personal_number,
+      "phone_number": req.body.phone_number
+    };
+    const response = await axiosInstance.post(`/webform_rest/submit`, body, config );
+    responseStatus = response.status;
+  } catch (error) {
+    responseStatus = error.response.status;
+  }
+
+  res.render(__dirname + "/snippet/petition", { responseStatus });
+
+  async function getSessionToken() {
+    const response = await axiosInstance.get(`session/token`);
+    return response.data
+  }
 });
 
 // Define unused card number

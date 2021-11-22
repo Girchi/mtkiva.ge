@@ -1,0 +1,87 @@
+// Head
+include parts/head.pug
+
+// Template CSS Files
+link(href='/assets/css/style.css' rel='stylesheet')
+link(rel="stylesheet", href="/assets/css/petition.css")
+
+// Header 
+include parts/header.pug
+
+.container#petitionContainer
+  ul.sign-options#options
+  
+    li
+      a.collapsed(data-bs-toggle='collapse' data-bs-target='#authSign')
+        | ავტორიზაცია და ხელმოწერა
+        i.bx.bx-chevron-down.icon-show
+        i.bx.bx-chevron-up.icon-close
+      #authSign.collapse(data-bs-parent='.sign-options')
+        button.login-btn.mt-2#loginBtn2
+          i.bx.bxl-facebook-square
+          span ავტორიზაცია
+
+    li
+      a.collapsed(data-bs-toggle='collapse' data-bs-target='#noAuthSign')
+        | ხელმოწერა ავტორიზაციის გარეშე 
+        i.bx.bx-chevron-down.icon-show
+        i.bx.bx-chevron-up.icon-close
+      #noAuthSign.collapse.show(data-bs-parent='.sign-options')
+
+        form#formPetition.form.col-12.col-md-8.col-lg-6(action='/petition' method='POST' enctype="multipart/form-data")
+          div.messages
+            #successMessage.alert.alert-success პეტიცია წარმატებით დაემატა
+              i.bx.bx-checkbox-checked
+            #deniedMessage.alert.alert-danger სცადეთ მოგვიანებით
+              i.bx.bx-error-circle
+          h3.heading პეტიცია
+          .form-group.mb-3.hide
+            label.col-form-label ტოკენი
+            input.form-control(type='text' id="hiddenToken" name="token")
+          .form-group.mb-3
+            label.col-form-label სახელი*
+            input.form-control(type='text' id="nameInput" name="name" required)
+          .form-group.mb-3
+            label.col-form-label გვარი*
+            input.form-control(type='text' id="surnameInput" name="surname" required)
+          .form-group.mb-3
+            label.col-form-label პირადი ნომერი*
+            input.form-control(onKeyPress="if(this.value.length === 11) return false;" type='text' id="personalNumInput" name="personal_number" required)
+          .form-group.mb-3
+            label.col-form-label ტელეფონის ნომერი*
+            input.form-control(type='tel' onKeyPress="if(this.value.length === 9) return false;" id="phoneNumInput"  name="phone_number" required)
+          .form-group.mb-5
+            label.col-form-label ელ.ფოსტა*
+            input.form-control(type='email' id="emailInput" name="email" required)
+          .form-group.text-center
+            input.btn(type='submit' value='ხელის მოწერა') 
+
+
+
+// Footer
+include parts/footer.pug
+
+script.
+  const responseStatus = !{JSON.stringify(responseStatus)}
+  console.log(responseStatus)
+  if(responseStatus === 200){
+    successMessage.classList.add('show');
+    setTimeout(() => {
+      successMessage.classList.remove('show');
+    }, 6000)
+  } else if (responseStatus !== null) {
+    deniedMessage.classList.add('show');
+    setTimeout(() => {
+      deniedMessage.classList.remove('show');
+    }, 6000)
+  }
+
+
+
+  if(localStorage.getItem('UserDetails')){
+    petitionContainer.appendChild(formPetition)
+    options.style.display = 'none';
+  }
+
+// Scripts 
+include parts/scripts.pug

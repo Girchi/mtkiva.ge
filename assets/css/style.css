@@ -236,7 +236,6 @@ h6 {
 
 .navbar a,
 .navbar a:focus,
-.navbar button,
 .navbar .getstarted {
   display: flex;
   align-items: center;
@@ -251,8 +250,6 @@ h6 {
 
 .navbar a i,
 .navbar a:focus i,
-.navbar button i,
-.navbar button:focus i,
 .navbar .getstarted:focus i{
   font-size: 12px;
   line-height: 0;
@@ -260,7 +257,6 @@ h6 {
 }
 
 .navbar a:hover,
-.navbar button:hover,
 .navbar .active,
 .navbar .active:focus,
 .navbar li:hover > a {
@@ -2138,21 +2134,40 @@ section {
 
 /* ------------- */
 
+.login-btn {
+  color: #fff;
+  background-color: #2d4373;
+  border-color: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  display: flex;
+  padding: .2rem .5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-btn i {
+  font-size: 1.5rem;
+  margin-right: .5rem;
+}
+
+.login-btn:hover {
+  transform: scale(1.04);
+}
 
 /* Login-Info */
 .login-info {
   display: none !important;
   align-items: center;
-  margin-left: 2rem;
   border-radius: 3px;
+  background: #fff;
   box-shadow: 0px 0 10px 0px rgba(18, 85, 101, 0.18);
   padding: 5px 10px !important;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
   height: 59px;
   min-width: 120px;
+  position: relative;
+  z-index: 20;
 }
-
 .login-info:hover {
   transform: scale(1.04);
 }
@@ -2175,6 +2190,7 @@ section {
   display: none !important;
   margin-left: 7px;
   padding: 19px 10px !important;
+  font-size: .9rem;
   border: none;
   box-shadow: 0px 0 10px 0px rgba(18, 85, 101, 0.18);
   transition: all 0.3s ease-in-out;
@@ -2195,12 +2211,21 @@ section {
   display: flex !important;
 }
 
+.user-area {
+  margin-left: 2rem;
+}
+
 @media (max-width: 1200px) {
-  .login-info {
+
+  .user-area {
     width: 95%;
+    margin: auto;
+  }
+
+  .login-info {
+    width: 100%;
     justify-content: center !important;
     padding: 8px 10px !important;
-    margin: auto;
   }
 
   .login-info:hover {
@@ -2222,6 +2247,7 @@ section {
     margin-top: 12px;
     justify-content: center !important;
     padding: 17px 10px !important;
+    font-size: .9rem;
   }
 
   .logout-btn-active {

@@ -15,12 +15,14 @@ header#header.fixed-top
         //-   a.nav-link.scrollto(href='/#services') პრინციპები
         li
           a.nav-link.scrollto(href='/#team') გუნდი
-        //- li
-        //-   a.nav-link.scrollto(href='/#faq') წევრობა
         li
-          button.getstarted.login-btn#loginBtn ავტორიზაცია
+          a.nav-link.scrollto(href='/petition') პეტიცია
+        li
+          button.login-btn.mx-3#loginBtn
+            i.bx.bxl-facebook-square
+            span ავტორიზაცია 
           div#loader
-        li 
+        li.user-area
           a.login-info#loginInfo(href="/redirect")
         li
           button.logout-btn#logoutBtn გასვლა
