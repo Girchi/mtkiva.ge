@@ -145,8 +145,8 @@ import convertLetters from "/assets/js/convertLetters.js";
             
             // Handle Logout for Petition Page 
             if(document.getElementById('formPetition')){
-                options.style.display = 'block';
-                noAuthSign.appendChild(formPetition)
+                authItem.style.display = 'block';
+                signHeading.innerText = 'ხელმოწერა ავტორიზაციის გარეშე'
             }
         })
 
@@ -188,8 +188,8 @@ import convertLetters from "/assets/js/convertLetters.js";
         // Handle Petition Page
         if(document.getElementById('formPetition')){
 
-            petitionContainer.appendChild(formPetition)
-            options.style.display = 'none';
+            authItem.style.display = 'none';
+            signHeading.innerText = 'ხელმოწერა'
 
             nameInput.value = localStore.userFirstName;
             surnameInput.value = localStore.userLastName;
@@ -198,7 +198,6 @@ import convertLetters from "/assets/js/convertLetters.js";
                 nameInput.value = userName;
             }
 
-            hiddenToken.value = localStore.token;
             personalNumInput.value = localStore.userPersonalId;
             phoneNumInput.value = localStore.userPhoneNumber;
             emailInput.value = localStore.userEmail;

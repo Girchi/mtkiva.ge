@@ -9,9 +9,10 @@ link(rel="stylesheet", href="/assets/css/petition.css")
 include parts/header.pug
 
 .container#petitionContainer
+
   ul.sign-options#options
   
-    li
+    li#authItem
       a.collapsed(data-bs-toggle='collapse' data-bs-target='#authSign')
         | ავტორიზაცია და ხელმოწერა
         i.bx.bx-chevron-down.icon-show
@@ -21,67 +22,162 @@ include parts/header.pug
           i.bx.bxl-facebook-square
           span ავტორიზაცია
 
-    li
+    li#sign-item
       a.collapsed(data-bs-toggle='collapse' data-bs-target='#noAuthSign')
-        | ხელმოწერა ავტორიზაციის გარეშე 
+        span#signHeading ხელმოწერა ავტორიზაციის გარეშე 
         i.bx.bx-chevron-down.icon-show
         i.bx.bx-chevron-up.icon-close
       #noAuthSign.collapse.show(data-bs-parent='.sign-options')
 
-        form#formPetition.form.col-12.col-md-8.col-lg-6(action='/petition' method='POST' enctype="multipart/form-data")
+        form#formPetition.form.col-12.col-md-8.col-lg-6
           div.messages
             #successMessage.alert.alert-success პეტიცია წარმატებით დაემატა
               i.bx.bx-checkbox-checked
             #deniedMessage.alert.alert-danger სცადეთ მოგვიანებით
               i.bx.bx-error-circle
           h3.heading პეტიცია
-          .form-group.mb-3.hide
-            label.col-form-label ტოკენი
-            input.form-control(type='text' id="hiddenToken" name="token")
           .form-group.mb-3
             label.col-form-label სახელი*
-            input.form-control(type='text' id="nameInput" name="name" required)
+            input.form-control(type='text' id="nameInput" required)
           .form-group.mb-3
             label.col-form-label გვარი*
-            input.form-control(type='text' id="surnameInput" name="surname" required)
+            input.form-control(type='text' id="surnameInput" required)
           .form-group.mb-3
             label.col-form-label პირადი ნომერი*
-            input.form-control(onKeyPress="if(this.value.length === 11) return false;" type='text' id="personalNumInput" name="personal_number" required)
+            input.form-control(type='text' id="personalNumInput" maxlength='11' required)
           .form-group.mb-3
             label.col-form-label ტელეფონის ნომერი*
-            input.form-control(type='tel' onKeyPress="if(this.value.length === 9) return false;" id="phoneNumInput"  name="phone_number" required)
+            input.form-control(type='tel' id="phoneNumInput" maxlength='9' required)
           .form-group.mb-5
             label.col-form-label ელ.ფოსტა*
-            input.form-control(type='email' id="emailInput" name="email" required)
+            input.form-control(type='email' id="emailInput" required)
           .form-group.text-center
-            input.btn(type='submit' value='ხელის მოწერა') 
+            input#submitBtn.btn(type='submit' value='ხელის მოწერა') 
 
 
+    li#results-item
+      a.collapsed(data-bs-toggle='collapse' data-bs-target='#signedList')
+        | ხელმოწერთა სია
+        i.bx.bx-chevron-down.icon-show
+        i.bx.bx-chevron-up.icon-close
+      #signedList.collapse.show(data-bs-parent='.sign-options')
+        div
+          ul#petitionList
+          button#loadBtn.btn.mt-2 მეტის ნახვა
 
 // Footer
 include parts/footer.pug
 
 script.
-  const responseStatus = !{JSON.stringify(responseStatus)}
-  console.log(responseStatus)
-  if(responseStatus === 200){
+
+  if(localStorage.getItem('UserDetails')){
+    authItem.style.display = 'none';
+    signHeading.innerText = 'ხელმოწერა'
+  }
+
+
+  // Grab Petitions Part
+  window.onload = () => {
+    getPetitions()
+  }
+
+  loadBtn.onclick = () => {
+    loadBtn.style.display = 'none';
+    getPetitions()
+  }
+
+  let submissionCount = 0;
+  async function getPetitions() { 
+
+    const domains = await axios.get('/assets/js/auth_config.json');
+    const axiosInstance = axios.create({ baseURL: domains.data.DRUPAL_DOMAIN })
+    
+    const { data: { data } } = await axiosInstance.get(`/jsonapi/webform_submission/petitsiis_shevseba?sort=-created&page[offset]=${submissionCount}&page[limit]=20`, {
+      headers: {
+        "pragma": "no-cache",
+        "cache-control": "no-cache"
+      },
+    })
+
+    submissionCount += data.length;
+    
+    for (const submission of data) {
+      const { data: { data } } = await axiosInstance.get(`/webform_rest/petitsiis_shevseba/submission/${submission.id}`)
+      petitionList.innerHTML += `
+        <li>${data.name} ${data.surname}</li>
+      `
+    }
+
+    console.log(data.length)
+    if(data.length === 20){
+      loadBtn.style.display = 'inline-block';
+    }
+  }
+
+
+  // Petition Send Part
+  formPetition.onsubmit = (e) => {
+    sendPetition(e)
+  }
+
+  async function sendPetition(e) {
+    e.preventDefault();
+
+    submitBtn.style.display = 'none'
+    setTimeout(() => {
+      submitBtn.style.display = 'inline-block'
+    }, 3000)
+
+    const domains = await axios.get('/assets/js/auth_config.json');
+    const axiosInstance = axios.create({ baseURL: domains.data.DRUPAL_DOMAIN })
+
+    try {
+      const accessToken = localStorage.getItem('UserDetails') !== null ? JSON.parse(localStorage.getItem('UserDetails')).token : ""
+      const sessionToken = await axiosInstance.get(`/session/token`);
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": accessToken,
+          "X-CSRF-Token": sessionToken.data
+        }
+      };
+      const body = {
+        "webform_id": "petitsiis_shevseba",
+        "name": nameInput.value,
+        "surname": surnameInput.value,
+        "email": emailInput.value,
+        "personal_number": personalNumInput.value,
+        "phone_number": phoneNumInput.value
+      };
+      const response = await axiosInstance.post(`/webform_rest/submit`, body, config );
+      if(response.status === 200) {
+        setSuccessMsg()
+        petitionList.innerHTML = ''
+        submissionCount = 0
+        getPetitions()
+      }
+    } catch (error) {
+      if(error) {
+        setDeniedMsg()
+      }
+    }
+  }
+
+  function setSuccessMsg() {
     successMessage.classList.add('show');
     setTimeout(() => {
       successMessage.classList.remove('show');
     }, 6000)
-  } else if (responseStatus !== null) {
+  }
+
+  function setDeniedMsg() {
     deniedMessage.classList.add('show');
     setTimeout(() => {
-      deniedMessage.classList.remove('show');
+      successMessage.classList.remove('show');
     }, 6000)
   }
 
-
-
-  if(localStorage.getItem('UserDetails')){
-    petitionContainer.appendChild(formPetition)
-    options.style.display = 'none';
-  }
 
 // Scripts 
 include parts/scripts.pug

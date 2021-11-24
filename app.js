@@ -277,73 +277,19 @@ app.post('/cards-download', (req, res) => {
 
 // Petition Page
 app.get("/petition", (req, res) => {
-  res.render(__dirname + "/snippet/petition", { responseStatus: null });
-});
-
-app.post("/petition", upload.none(), async (req, res) => {
-  let responseStatus;
-  try {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": req.body.token,
-        "X-CSRF-Token": await getSessionToken()
-      }
-    };
-    const body = {
-      "webform_id": "petitsiis_shevseba",
-      "name": req.body.name,
-      "surname": req.body.surname,
-      "email": req.body.email,
-      "personal_number": req.body.personal_number,
-      "phone_number": req.body.phone_number
-    };
-    const response = await axiosInstance.post(`/webform_rest/submit`, body, config );
-    responseStatus = response.status;
-  } catch (error) {
-    responseStatus = error.response.status;
-  }
-
-  res.render(__dirname + "/snippet/petition", { responseStatus });
-
-  async function getSessionToken() {
-    const response = await axiosInstance.get(`session/token`);
-    return response.data
-  }
+  res.render(__dirname + "/snippet/petition");
 });
 
 // Define unused card number
-function nextCardNum(priority) {
-	let mostReservedCards = [];
-	let reservedCards = [];
-	let otherCards = [];
+function nextCardNum() {
 
-	fs.readdirSync('./database').forEach((user) => {
-		user = JSON.parse(fs.readFileSync(`./database/${user}`, 'utf8'));
-		if (Number(user.card_number) <= 10) {
-			mostReservedCards.push(user.card_number);
-		} else if (Number(user.card_number) <= 1000) {
-			reservedCards.push(user.card_number);
-		} else if (Number(user.card_number) > 1000) {
-			otherCards.push(user.card_number);
-		}
-	});
+  const base = fs.readdirSync("./database")
+  .map(member => member = JSON.parse(fs.readFileSync(`./database/${member}`, 'utf8')).card_number)
+  .sort((a, b) => b - a);
 
-	mostReservedCards.sort((a, b) => b - a);
-	reservedCards.sort((a, b) => b - a);
-	otherCards.sort((a, b) => b - a);
+  let nextCardNum = Number(base[0]) + 1 || 1;
 
-	let nextCardNum;
-
-	if (priority == 1) {
-		nextCardNum = Number(mostReservedCards[0]) + 1 || 1;
-	} else if (priority == 2) {
-		nextCardNum = Number(reservedCards[0]) + 1 || 11;
-	} else {
-		nextCardNum = Number(otherCards[0]) + 1 || 1001;
-	}
-
-	return JSON.stringify(nextCardNum).padStart(4, '0');
+  return JSON.stringify(nextCardNum).padStart(4, '0')
 }
 
 (function makeImportantDirectories(){
