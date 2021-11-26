@@ -63,7 +63,7 @@ include parts/header.pug
       #signedList.collapse.show(data-bs-parent='.sign-options')
         div
           ul#petitionList
-          button#loadBtn.btn.mt-2 მეტის ნახვა
+          button#loadBtn.btn.mt-2(style="display:none") მეტის ნახვა
 
 // Footer
 include parts/footer.pug
@@ -92,7 +92,7 @@ script.
     const domains = await axios.get('/assets/js/auth_config.json');
     const axiosInstance = axios.create({ baseURL: domains.data.DRUPAL_DOMAIN })
     
-    const { data: { data } } = await axiosInstance.get(`/jsonapi/webform_submission/petitsiis_shevseba?sort=-created&page[offset]=${submissionCount}&page[limit]=20`, {
+    const { data: { data } } = await axiosInstance.get(`/jsonapi/webform_submission/mtkiva_ge_pettition_form?sort=-created&page[offset]=${submissionCount}&page[limit]=20`, {
       headers: {
         "pragma": "no-cache",
         "cache-control": "no-cache"
@@ -102,13 +102,12 @@ script.
     submissionCount += data.length;
     
     for (const submission of data) {
-      const { data: { data } } = await axiosInstance.get(`/webform_rest/petitsiis_shevseba/submission/${submission.id}`)
+      const { data: { data } } = await axiosInstance.get(`/webform_rest/mtkiva_ge_pettition_form/submission/${submission.id}`)
       petitionList.innerHTML += `
         <li>${data.name} ${data.surname}</li>
       `
     }
 
-    console.log(data.length)
     if(data.length === 20){
       loadBtn.style.display = 'inline-block';
     }
@@ -143,7 +142,7 @@ script.
         }
       };
       const body = {
-        "webform_id": "petitsiis_shevseba",
+        "webform_id": "mtkiva_ge_pettition_form",
         "name": nameInput.value,
         "surname": surnameInput.value,
         "email": emailInput.value,
