@@ -7,4 +7,5 @@ https-conf/
 
 *.html
 .env
-.vscode
+.vscodekeys/
+keys/

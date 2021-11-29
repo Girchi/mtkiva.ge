@@ -1,6 +1,5 @@
 .form {
   display: flex;
-  align-items: center;  
   flex-direction: column;
   margin: 2rem auto 2rem;
   padding: 3rem;
@@ -8,6 +7,17 @@
   box-shadow: 0 0px 20px 0 rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 0px 20px 0 rgba(0, 0, 0, 0.2);
   background: #fff;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .heading {
